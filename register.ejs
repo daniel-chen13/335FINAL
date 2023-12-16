@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Register</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+    <div id="loginPage">
+	<h1>Register Account</h1>
+    
+	<form action="/register" method="post" id="alert" onsubmit="return confirmSubmission()">
+		<fieldset>
+			<label><b>Username:</b> <input type="text" name="username"></label>
+            <br><br>
+			<label><b>Password:</b> <input type="text" name="password"></label>
+            <br><br>
+            <label><b>Nickname:</b> <input type="text" name="nickname"></label>
+
+		</fieldset>
+
+		<br>
+		<input type="submit" value="Create New Account" />
+
+        <hr>
+
+        <div id = "registerLink"><a href="/login">LOGIN PAGE</a></div>
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+	</form>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function confirmSubmission() {
+        const isConfirm = confirm("Once you create your nickname, it cannot be changed.\nDouble check before creating.");
+        return isConfirm;
+    }
+</script>
+
