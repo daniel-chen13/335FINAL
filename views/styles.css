@@ -1,0 +1,41 @@
+#login {
+    background-color: #f9c5bd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #8076a3;
+}
+
+#dashboard {
+    background-color: #f9c5bd;
+    color: #8076a3;
+}
+
+input[type="text"], textarea {
+
+    background-color : #FFE7E3; 
+  
+}
+
+input[type="submit"] {
+
+    background-color : #FFE7E3; 
+  
+}
+
+h1 {
+    font-size: 70px;
+}
+
+form {
+    font-size: 30px;
+}
+
+#linkOrButtonCenter {
+    text-align: center;
+}
+
+a:link {
+    color: #8076a3;
+}

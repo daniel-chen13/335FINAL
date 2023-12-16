@@ -23,7 +23,6 @@ const {
 
 const mongoUrl = `mongodb+srv://${MONGO_DB_USERNAME}:${MONGO_DB_PASSWORD}@cluster0.ia5bo31.mongodb.net/${MONGO_DB_NAME}?retryWrites=true&w=majority`;
 
-// const client = new MongoClient(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 const client = new MongoClient(mongoUrl, { serverApi: ServerApiVersion.v1 });
 
 async function connectToDatabase() {
@@ -85,11 +84,13 @@ app.post('/login', async (req, res) => {
         const { username, password } = req.body;
         const db = client.db(MONGO_DB_NAME);
         const nicknames = db.collection('dashboardUserData');
+        const credentials = db.collection('dashboardCredentials');
         
         const entry = await nicknames.findOne({ username });
+        const check = await credentials.findOne({ username });
 
-        if (entry) {
-            const { nickname, reminders } = entry;
+        if (entry && check && (check.password === password)) {
+            const { nickname } = entry;
 
             // Redirect to dashboard with query parameter
             const encodedNickname = encodeURIComponent(nickname);
@@ -114,93 +115,57 @@ app.get('/dashboard', async (req, res) => {
     const { nickname, reminders } = entry;
     nickname_of_user = nickname;
     var url = "";
-    // await axios.get(apiURLNASA, {
-    //     headers: {
-    //       Authorization: `Bearer ${apiKeyNASA}`,
-    //     },
-    //   })
-    //     .then(response => {
-    //       console.log('API response:', response.data);
-    //       url = response.data.url;
-    //     })
-    //     .catch(error => {
-    //       console.error('Error fetching data:', error);
+    await axios.get(apiURLNASA, {
+        headers: {
+          Authorization: `Bearer ${apiKeyNASA}`,
+        },
+      })
+        .then(response => {
+          console.log('API response:', response.data);
+          url = response.data.url;
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
 
-    //     });
+        });
+
     var headlineTitle = "";
     var headlineLink = "";
-    // await axios.get(apiURLNews, {
-    //     headers: {
-    //         Authorization: `Bearer ${apiKeyNews}`,
-    //     },
-    //     })
-    //     .then(response => {
-    //         // console.log('API response:', response.data);
-    //         headlines = response.data.articles;
-    //         const randomIndex = Math.floor(Math.random() * headlines.length);
-    //         const randomArticle = headlines[randomIndex];
-    //         headlineTitle = randomArticle.title;
-    //         headlineLink = randomArticle.url;
-    //     })
-    //     .catch(error => {
-    //         console.error('Error fetching data:', error);
-    //     });
 
-    // let arrayString = String(entry.reminders
+    await axios.get(apiURLNews, {
+        headers: {
+            Authorization: `Bearer ${apiKeyNews}`,
+        },
+        })
+        .then(response => {
+            // console.log('API response:', response.data);
+            headlines = response.data.articles;
+            const randomIndex = Math.floor(Math.random() * headlines.length);
+            const randomArticle = headlines[randomIndex];
+            headlineTitle = randomArticle.title;
+            headlineLink = randomArticle.url;
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 
     let arrayString = '';
     for (let i = 0; i < entry.reminders.length; i++) {
         arrayString += '<li>' + entry.reminders[i] + '</li>';
     }
     res.render('dashboard', { nickname: req.query.data, reminderList: arrayString, nasaURL: url, headlineTitle: headlineTitle, headlineLink: headlineLink});
-    // res.render('dashboard', { nickname: req.query.data, reminderList: entry.reminders, nasaURL: url });
-
-    // let newReminderElement = document.querySelector("#newReminderButton");
-    // newRemindElement.addEventListener("click", addReminder);
-    
-    // function addReminder() {
-    //     //  const nicknames = db.collection('dashboardUserData');
-    //      const newList = await nicknames.reminders.append(document.querySelector(#newReminderInfo).value);
-
-            
-    //      //res.render('dashboard', { nickname: req.query.data });
-    // }
-    // const nicknames = db.collection('dashboardUserData');
-    // const result2 = await nicknames.reminders.insertOne(______);
-
-
-    // try {
-    //     const { username, password } = req.body; 
-    //     const db = client.db(MONGO_DB_NAME);
-    //     const userData = db.collection('dashboardUserData');
-
-    //     const user = await userData.findOne({ username, password });
-
-    //     if (user) {
-    //         const { nickname, table } = user;
-    //         res.render('dashboard', { nickname, table });
-    //     } else {
-    //         res.status(404).send('User data not found');
-    //     }
-    // } catch (err) {
-    //     console.error(err);
-    //     res.status(500).send('Internal Server Error');
-    // }
 
 });
 
-
-
 app.post('/dashboard', async (req, res) => {
     const newReminder = req.body.reminder;
-    console.log("new reminder: " + newReminder);
-    console.log(newReminder);
+
     const db = client.db(MONGO_DB_NAME);
     const nicknames = db.collection('dashboardUserData');
         
     const entry = await nicknames.findOne({ nickname: nickname_of_user });
 
-    const { nickname, reminders } = entry;
+    const { reminders } = entry;
 
     reminders.push(newReminder);
 

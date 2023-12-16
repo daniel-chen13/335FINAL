@@ -7,7 +7,7 @@
 </head>
 
 <body>
-
+    <div id="login">
     <div>
         <h1>Hello <%- nickname %>! Welcome to your Dashboard.</h1>
     </div>
@@ -30,9 +30,9 @@
                 </ul>
 
             </div>
-
         </div>
     </div>
+
     <div class="split right">
         <h2>Today's Random Headline:</h2>
         <div id = "headlines">
@@ -44,9 +44,6 @@
         <h2>Today's NASA Picture of Space:</h2>
         <div id = "picture">
             <img src=<%- nasaURL %> alt="NASA Picture of the Day">
-            <script>
-                console.log('NASA URL:', '<%= nasaURL %>');
-            </script>
         </div>
     </div>
 
@@ -68,15 +65,37 @@
                     },
                     body: JSON.stringify({ reminder: newReminderText })
                 });
-            });
+                document.getElementById('newReminderInfo').value = "";
+    
+            });       
         }
     </script>
-
+    </div>
 </body>
 
 </html>
 
 <style>
+    input[type="text"], textarea {
+        background-color : #FFE7E3; 
+    }
+
+    #theList {
+        color: #8076a3;
+        font-size: 20px;
+    }
+    input[type="submit"] {
+        background-color : #FFE7E3; 
+    }
+
+    input[type="button"] {
+        background-color : #FFE7E3; 
+    }
+
+    a:link {
+        color: #7c677f;
+    }
+
     #title {
         margin-left: 20px;
         text-align: 50%;
@@ -85,8 +104,10 @@
     #items {
         width: 93%;
         margin-left: 20px;
-        height: 650px;
-        border: 1px solid black;
+        height: 450px;
+        border: 1px solid #7c677f;
+
+;
         padding: 10px;
         margin: 10px;
         overflow: auto;
@@ -96,8 +117,10 @@
     #weather {
         width: 95%;
         margin-left: 20px;
-        height: 300px;
-        border: 1px solid black;
+        height: 200px;
+        border: 1px solid #7c677f;
+
+;
         margin-top: 20px;
         display: inline-block;
     }
@@ -105,14 +128,20 @@
     #picture {
         width: 95%;
         margin-left: 20px;
-        height: 700px;
-        border: 1px solid black;
+        height: 500px;
+        border: 1px solid #7c677f;
         margin-top: 20px;
         display: inline-block;
     }
 
     h1 {
         margin-left: 20px;
+        font-size: 50px;
+        color: #7D4F84;
+    }
+
+    h2 {
+        color: #7D5982;
     }
 
     .split {
@@ -127,12 +156,12 @@
 
     .left {
     left: 0;
-    background-color: #9fd3c7;
+    background-color: #f9c5bd;
     }
 
     .right {
     right: 0;
-    background-color: #9fd3c7;
+    background-color: #f9c5bd;
     }
 
     #picture img {
